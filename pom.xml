@@ -8,44 +8,153 @@
   <name>app Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
+      <!--<dependency>-->
+          <!--<groupId>javax</groupId>-->
+          <!--<artifactId>javaee-api</artifactId>-->
+          <!--<version>7.0</version>-->
+          <!--<scope>provided</scope>-->
+      <!--</dependency>-->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>javax.servlet-api</artifactId>
-    <version>3.1.0</version>
-    <scope>provided</scope>
-  </dependency>
-  </dependencies>
 
-  <build>
-    <finalName>app</finalName>
-    <plugins>
-      <!-- https://mvnrepository.com/artifact/org.apache.tomcat.maven/tomcat8-maven-plugin -->
+      <!--<dependency>-->
+          <!--<groupId>ua.nure.hrynko</groupId>-->
+          <!--<artifactId>calc</artifactId>-->
+          <!--<version>1.0-SNAPSHOT</version>-->
+      <!--</dependency>-->
 
-      <plugin>
-          <groupId>org.apache.tomcat.maven</groupId>
-          <artifactId>tomcat7-maven-plugin</artifactId>
-          <version>2.2</version>
-          <configuration>
-            <path>/app</path>
-            <url>http:// localhost:8080/app</url>
-            <server>TomcatServer</server>
-            <username>admin</username>
-            <password>password</password>
-          </configuration>
-        </plugin>
-      <plugin>
+
+      <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+          <version>3.1.0</version>
+      </dependency>
+
+      <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>jstl</artifactId>
+          <version>1.2</version>
+      </dependency>
+
+      <dependency>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+          <version>1.2</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+          <version>1.7.25</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>jul-to-slf4j</artifactId>
+          <version>1.7.25</version>
+      </dependency>
+
+      <dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+          <version>1.0.13</version>
+      </dependency>
+      <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+          <version>3.0.1</version>
+      </dependency>
+      <!--<dependency>
+     <groupId>javax.servlet</groupId>
+     <artifactId>javax.servlet-api</artifactId>
+     <version>3.1.0</version>
+     <scope>provided</scope>
+   </dependency> -->
+ </dependencies>
+
+ <build>
+   <finalName>app</finalName>
+   <plugins>
+       <!--<plugin>-->
+           <!--<groupId>org.codehaus.mojo</groupId>-->
+           <!--<artifactId>properties-maven-plugin</artifactId>-->
+           <!--<version>1.0.0</version>-->
+           <!--<executions>-->
+               <!--<execution>-->
+                   <!--<phase>initialize</phase>-->
+                   <!--<goals>-->
+                       <!--<goal>read-project-properties</goal>-->
+                   <!--</goals>-->
+                   <!--<configuration>-->
+                       <!--<files>-->
+                           <!--<file>src/main/resources/tomcat.properties</file>-->
+                       <!--</files>-->
+                   <!--</configuration>-->
+               <!--</execution>-->
+           <!--</executions>-->
+       <!--</plugin>-->
+     <!-- https://mvnrepository.com/artifact/org.apache.tomcat.maven/tomcat8-maven-plugin -->
+
+
+     <plugin>
+       <groupId>org.apache.tomcat.maven</groupId>
+       <artifactId>tomcat7-maven-plugin</artifactId>
+       <version>2.2</version>
+       <configuration>
+         <path>/app</path>
+         <url>http://localhost:8080/app</url>
+         <server>TomcatServer</server>
+         <username>admin</username>
+         <password>password</password>
+       </configuration>
+     </plugin>
+
+     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
         <configuration>
+            <!--<target name="validate-tomcat">-->
+            <!--<condition property="tomcat.available">-->
+                <!--<and>-->
+                    <!--<isset property="C:/Program Files/Apache Software Foundation/Tomcat 7.0"/>-->
+                    <!--<available-->
+                            <!--classname="org.apache.tomcat.startup.Tomcat">-->
+                        <!--<classpath>-->
+                            <!--<fileset dir="C:/Program Files/Apache Software Foundation/Tomcat 7.0/lib">-->
+                                <!--<include name="**/*.jar"/>-->
+                            <!--</fileset>-->
+                        <!--</classpath>-->
+                    <!--</available>-->
+                <!--</and>-->
+            <!--</condition>-->
+            <!--<echo>tomcat.available=${tomcat.available}</echo>-->
+            <!--</target>-->
+
           <target>
-            <echo message=" hello world"/>
+            <property name="tomcat.home.dir" location="C:\Program Files\Apache Software Foundation\Tomcat 7.0" />
+
+            <path id="tomcat.classpath">
+              <fileset dir="${tomcat.home.dir}/lib">
+                <include name="catalina-ant.jar" />
+                <include name="tomcat-coyote.jar" />
+                <include name="tomcat-util.jar" />
+              </fileset>
+              <fileset dir="${tomcat.home.dir}/bin">
+                <include name="tomcat-juli.jar" />
+              </fileset>
+            </path>
+
+            <taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask"
+                     classpathref="tomcat.classpath" />
+
+            <reload url="http://localhost:8080/manager/text"
+                    username="admin" password="password" path="/app" />
+
           </target>
           <!--
          <property name="src" location="src"/>
@@ -65,6 +174,14 @@
           -->
         </configuration>
       </plugin>
+       <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-compiler-plugin</artifactId>
+           <configuration>
+               <source>1.7</source>
+               <target>1.7</target>
+           </configuration>
+       </plugin>
     </plugins>
   </build>
 </project>
